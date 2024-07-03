@@ -1,0 +1,1 @@
+g++ main.cpp textBox.cpp bullet.cpp player.cpp cursor.cpp enemy.cpp -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
