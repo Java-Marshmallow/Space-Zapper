@@ -13,9 +13,6 @@ class Bullet
     // Respectively: distance between target & origin on x/y axes, and total distance, and the current amount travelled
     float deltaX, deltaY, delta, distanceTravelled;
     // Bullet's collision rectangle
-    Rectangle bulletRect;
-    // Rectangle's color and speed
-    Color color = YELLOW;
     float speedScale;
 
     public:

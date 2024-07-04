@@ -9,7 +9,7 @@
 *                                                         *
 *   To-do list:                                           *
 *                                                         *      
-*   Complete!                                             *
+*   Fix cursor movements for web                          *
 *                                                         *      
 ************************************************************/
 
@@ -19,7 +19,6 @@ int main()
     InitWindow(256, 240, "Space Zapper");
     InitAudioDevice();
     SetTargetFPS(60);
-    HideCursor();
 
     // Initialize variables that'll be used in-game
     int score = 0;
@@ -44,7 +43,7 @@ int main()
     Player player(pTex, LoadTexture("../assets/images/explosion.png"), 2);
 
     // Create a cursor instance
-    Cursor cursor(LoadTexture("../assets/images/cursor.png"));
+    //Cursor cursor(LoadTexture("../assets/images/cursor.png"));
 
     // Create the text boxes
     TextBox scoreBox(gameFont, ("score " + std::to_string(score)), 12, 0, 0, 5);
@@ -118,7 +117,7 @@ int main()
             hiScoreBox.SetText("hiscore\n" + std::to_string(hiScore));
 
             // Update and draw the cursor.
-            cursor.FindMouse();
+            //cursor.FindMouse();
 
             if(player.HasLost()) PlaySound(death);
         }
