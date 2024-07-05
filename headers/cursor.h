@@ -21,4 +21,6 @@ class Cursor
     void Draw();
 
     Vector2 GetCursorCenter();
+
+    void Center(Rectangle);
 };

@@ -52,3 +52,9 @@ Vector2 Cursor::GetCursorCenter()
 {
     return (Vector2){cursorRect.x + cursorRect.width/2, cursorRect.y + cursorRect.height/2};
 }
+
+void Cursor::Center(Rectangle centerRect)
+{
+    cursorRect.x = centerRect.x + centerRect.width/2 - cursorRect.width/2;
+    cursorRect.y = centerRect.y + centerRect.height/2 - cursorRect.height/2;
+}

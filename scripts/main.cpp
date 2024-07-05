@@ -85,14 +85,15 @@ int main()
                 ClearBackground(BLACK);
 
                 // Set move mode based on whether a key is pressed
-                if(IsKeyDown(SWITCH_MODE)) currentMode = CURSOR; else currentMode = PLAYER;
+                if(IsKeyDown(SWITCH_MODE)) 
+                {
+                    currentMode = CURSOR;
+                    if(IsKeyPressed(SWITCH_MODE))cursor.Center(player.GetRect());
+                } else currentMode = PLAYER;
 
                 // For every enemy, the player checks if they've collided with it.
                 for(int i = 0; i < enemyList.size(); i++) player.CheckCollisionEnemy(enemyList[i].GetRect());
 
-                // Change what moves based on current move mode
-                if(currentMode == PLAYER) player.Move(); 
-                else cursor.Move(6);
                 // Draw player
                 player.Draw();
 
@@ -137,8 +138,14 @@ int main()
                 hiScoreBox.DrawText(); 
                 hiScoreBox.SetText("hiscore\n" + std::to_string(hiScore));
 
-                // Draw the cursor
-                cursor.Draw();
+                // Change what moves based on current move mode
+                if(currentMode == PLAYER) player.Move(); 
+                else 
+                {
+                    cursor.Move(6);
+                    // Draw the cursor
+                    cursor.Draw();
+                }
 
                 if(player.HasLost()) PlaySound(death);
             }
