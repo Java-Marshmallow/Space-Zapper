@@ -60,7 +60,7 @@ int main()
     // Create the text boxes
     TextBox scoreBox(gameFont, ("score " + to_string(score)), 12, 0, 0, 5);
     TextBox hiScoreBox(gameFont, ("hiscore\n" + to_string(hiScore)), 12, 145.5, 0, 5);
-    TextBox pauseBox(gameFont, "paused", 12, 0, 50, 5);
+    TextBox pauseBox(gameFont, "paused", 12, GetScreenWidth()/2 - 43, GetScreenHeight()/2 - 6, 5);
 
     // Create the vectors to store the bullets and enemies
     vector<Bullet> bulletList;
