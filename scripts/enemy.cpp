@@ -5,8 +5,6 @@ Enemy::Enemy(Texture2D texture, Player player)
 {
     // Stores enemy texture
     enemyTexture = texture;
-    // Seed the RNG to make it closer to true random
-    std::srand(time(NULL));
     // Set up hitbox
     enemyRect.width = enemyTexture.width*scale;
     enemyRect.height = enemyTexture.height*scale;
@@ -55,8 +53,8 @@ void Enemy::SetTarget(Player player)
 void Enemy::SetStartPos(Player player)
 {
     // Pick a random new X and Y pos
-    enemyRect.x = rand() % randMaxX;
-    enemyRect.y = rand() % randMaxY;
+    enemyRect.x = GetRandomValue(0, randMaxX);
+    enemyRect.y = GetRandomValue(0, randMaxY);
     // If that new position is too close to the player then it should try again
     if(CheckCollisionRecs(enemyRect, player.GetSpawnRect())) SetStartPos(player);
 }
