@@ -15,12 +15,12 @@ Cursor::Cursor(Texture2D texture, float scale)
 void Cursor::Move(float speed) 
 {
     // If arrow keys are pressed, change the cursor's x
-    if(IsKeyDown(LEFT)) cursorRect.x -= speed; 
-    else if (IsKeyDown(RIGHT)) cursorRect.x += speed;
+    if(IsKeyDown(LEFT)) cursorRect.x -= speed * GetFrameTime(); 
+    else if (IsKeyDown(RIGHT)) cursorRect.x += speed * GetFrameTime();
 
     // Same as left and right movements but for y axis
-    if(IsKeyDown(UP)) cursorRect.y -= speed; 
-    else if (IsKeyDown(DOWN)) cursorRect.y += speed;
+    if(IsKeyDown(UP)) cursorRect.y -= speed * GetFrameTime(); 
+    else if (IsKeyDown(DOWN)) cursorRect.y += speed * GetFrameTime();
 
     // Correct the x and y coordinates if the cursor leaves the screen
     if(cursorRect.x + cursorRect.width > GetScreenWidth()) 

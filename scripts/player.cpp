@@ -39,8 +39,8 @@ void Player::CheckCollisionEnemy(Rectangle otherRect)
 void Player::Move() 
 {
     // Move based on calculated velocities
-    playerRect.x += xVel;
-    playerRect.y += yVel;
+    playerRect.x += xVel * GetFrameTime() * 70;
+    playerRect.y += yVel * GetFrameTime() * 70;
 
     // If player goes too far right, move them back in and reset their velocity
     if(playerRect.x + playerRect.width + offset > GetScreenWidth()) 

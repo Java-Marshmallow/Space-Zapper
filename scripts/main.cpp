@@ -35,7 +35,7 @@ int main()
     int hiScore = 0;
     int resetTick = 0;
     int enemyCount = 2;
-    float enemySpeed = 0.5;
+    float enemySpeed = 30;
     bool paused = false;
     MoveMode currentMode = PLAYER;
 
@@ -79,6 +79,7 @@ int main()
         {
             // The game should pause like that if you lose or if you beat the level
             if(player.HasLost() || enemyList.size() == 0) resetTick = 1;
+
             if(!paused)
             {
                 // Wipe the screen
@@ -88,6 +89,7 @@ int main()
                 if(IsKeyDown(SWITCH_MODE)) 
                 {
                     currentMode = CURSOR;
+                    // Only center the cursor if the key is pressed once
                     if(IsKeyPressed(SWITCH_MODE))cursor.Center(player.GetRect());
                 } else currentMode = PLAYER;
 
@@ -142,7 +144,7 @@ int main()
                 if(currentMode == PLAYER) player.Move(); 
                 else 
                 {
-                    cursor.Move(6);
+                    cursor.Move(400);
                     // Draw the cursor
                     cursor.Draw();
                 }
@@ -170,12 +172,12 @@ int main()
             {
                 score = 0;
                 enemyCount = 2;
-                enemySpeed = 0.5;
+                enemySpeed = 30;
             }
             else 
             {
                 enemyCount++;
-                enemySpeed += 0.1;
+                enemySpeed += 10;
             }
             // Put the player back at the center of the screen, and reset the enemies/bullets.
             player.Reset();

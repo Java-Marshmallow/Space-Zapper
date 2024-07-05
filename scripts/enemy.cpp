@@ -29,9 +29,9 @@ void Enemy::Draw(Player player, float speed)
         SetTarget(player);
     } else {
         // Same movement code as the bullet
-        enemyRect.x += deltaX/delta * speed;
-        enemyRect.y += deltaY/delta * speed;
-        distanceTravelled += sqrt(pow(deltaX/delta * speed, 2) + pow(deltaY/delta * 2, 2));
+        enemyRect.x += deltaX/delta * speed * GetFrameTime();
+        enemyRect.y += deltaY/delta * speed * GetFrameTime();
+        distanceTravelled += sqrt(pow(deltaX/delta * speed * GetFrameTime(), 2) + pow(deltaY/delta * 2 * GetFrameTime(), 2));
         // Draw enemies to the screen
         DrawTextureEx(enemyTexture, (Vector2){enemyRect.x, enemyRect.y}, 0, 2, WHITE);
     }
