@@ -36,10 +36,10 @@ void Bullet::ShootTick() // This took way longer than I would care to admit
         distanceTravelled = 0;
     } else { 
         // I'm not sure how this math works but it does so I'm not touching it
-        bulletRect.x += deltaX/delta * speedScale;
-        bulletRect.y += deltaY/delta * speedScale;
+        bulletRect.x += deltaX/delta * speedScale * GetFrameTime() * 70;
+        bulletRect.y += deltaY/delta * speedScale * GetFrameTime() * 70;
         // Distance travelled is calculated using Pythagorean Theorem
-        distanceTravelled += sqrt(pow(deltaX/delta * speedScale, 2) + pow(deltaY/delta * speedScale, 2));
+        distanceTravelled += sqrt(pow(deltaX/delta * speedScale * GetFrameTime() * 70, 2) + pow(deltaY/delta * speedScale * GetFrameTime() * 70, 2));
         // Draw Bullet
         DrawTextureEx(bulletTexture, (Vector2){bulletRect.x, bulletRect.y}, 0, 2, WHITE);
     }
