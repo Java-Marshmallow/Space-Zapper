@@ -177,7 +177,7 @@ int main()
             else 
             {
                 enemyCount++;
-                enemySpeed += 10;
+                enemySpeed += 5;
             }
             // Put the player back at the center of the screen, and reset the enemies/bullets.
             player.Reset();
