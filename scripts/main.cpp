@@ -186,6 +186,15 @@ int main()
     }
     
     // Once the game loop has been given a signal to stop, the window closes and the game is done
+    bulletList.clear();
+    enemyList.clear();
+    UnloadFont(gameFont);
+    UnloadTexture(pTex);
+    UnloadTexture(eTex);
+    UnloadTexture(bTex);
+    UnloadSound(death);
+    UnloadSound(shoot);
+    
     CloseWindow();
     return 0;
 }
