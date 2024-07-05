@@ -61,8 +61,6 @@ int main()
     // Main gameplay loop. Everything in here happens 60 times every second.
     while(!WindowShouldClose())
     {
-
-        if(IsGamepadAvailable(0)) cout << "ready" << endl;
         // Begin the drawing to the screen
         BeginDrawing();
 
@@ -125,7 +123,7 @@ int main()
                 hiScoreBox.SetText("hiscore\n" + std::to_string(hiScore));
 
                 // Update and draw the cursor
-                cursor.Move(10);
+                cursor.Move(6);
                 cursor.Draw();
 
                 if(player.HasLost()) PlaySound(death);
