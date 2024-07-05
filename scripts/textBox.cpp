@@ -39,3 +39,14 @@ bool TextBox::CheckCollision()
 {
     if(CheckCollisionPointRec(GetMousePosition(), textBoxRect) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) return true; else return false;
 }
+
+Rectangle TextBox::GetRect()
+{
+    return textBoxRect;
+}
+
+void TextBox::SetPosition(Vector2 pos)
+{
+    textBoxRect.x = pos.x;
+    textBoxRect.y = pos.y;
+}

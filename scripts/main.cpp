@@ -61,6 +61,8 @@ int main()
     TextBox scoreBox(gameFont, ("score " + to_string(score)), 12, 0, 0, 5);
     TextBox hiScoreBox(gameFont, ("hiscore\n" + to_string(hiScore)), 12, 145.5, 0, 5);
     TextBox pauseBox(gameFont, "paused", 12, GetScreenWidth()/2 - 43, GetScreenHeight()/2 - 6, 5);
+    // Center the pause text
+    pauseBox.SetPosition((Vector2){GetScreenWidth()/2 - pauseBox.GetRect().width/2, GetScreenHeight()/2 - pauseBox.GetRect().height/2});
 
     // Create the vectors to store the bullets and enemies
     vector<Bullet> bulletList;

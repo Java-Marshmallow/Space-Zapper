@@ -29,4 +29,8 @@ class TextBox
     void SetText(std::string);
 
     bool CheckCollision();
+
+    Rectangle GetRect();
+
+    void SetPosition(Vector2);
 };
