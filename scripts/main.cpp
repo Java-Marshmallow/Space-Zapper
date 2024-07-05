@@ -1,7 +1,6 @@
 #include "raylib.h"
 #include <string>
 #include <vector>
-#include <iostream>
 #include "../headers/textBox.h"
 #include "../headers/cursor.h"
 #include "../headers/enemy.h"
@@ -85,7 +84,6 @@ int main()
 
                 // Set move mode based on whether a key is pressed
                 if(IsKeyDown(SWITCH_MODE)) currentMode = CURSOR; else currentMode = PLAYER;
-                cout << currentMode << endl;
 
                 // For every enemy, the player checks if they've collided with it.
                 for(int i = 0; i < enemyList.size(); i++) player.CheckCollisionEnemy(enemyList[i].GetRect());
