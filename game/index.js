@@ -197,7 +197,7 @@ Module.expectedDataFileDownloads++;
    "end": 34926
   } ],
   "remote_package_size": 34926,
-  "package_uuid": "10259aeb-f5be-429f-b96a-ce3b04cc9ef5"
+  "package_uuid": "0cf95d77-edb1-45bf-ab3f-b3a36989a99c"
  });
 })();
 

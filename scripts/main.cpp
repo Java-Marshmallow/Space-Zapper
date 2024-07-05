@@ -98,7 +98,7 @@ int main()
                 player.Draw();
 
                 // When the mouse is clicked, create a new bullet and add it to the bullet list.
-                if(IsKeyPressed(SHOOT)) 
+                if(IsKeyPressed(SHOOT) && currentMode == CURSOR) 
                 {
                     // Set the bullet position to the player position and add the bullet to the beginning of the bullet list.
                     // This makes sense since the first bullet to be destroyed will be the last one added to the list.
