@@ -1,4 +1,5 @@
 #include "../headers/cursor.h"
+#include "../headers/keyDefinitions.h"
 
 // Constructor sets the texture
 Cursor::Cursor(Texture2D texture, float scale) 
@@ -6,18 +7,20 @@ Cursor::Cursor(Texture2D texture, float scale)
     cursorTexture = texture;
     cursorRect.width = cursorTexture.width * scale;
     cursorRect.height = cursorTexture.height * scale;
+    cursorRect.x = GetScreenWidth()/2 - cursorRect.width/2;
+    cursorRect.y = GetScreenHeight()/2 - cursorRect.height/2; 
 }
 
 // Calculate velocity and move, similar to player
 void Cursor::Move(float speed) 
 {
     // If arrow keys are pressed, change the cursor's x
-    if(IsKeyDown(KEY_LEFT)) cursorRect.x -= speed; 
-    else if (IsKeyDown(KEY_RIGHT)) cursorRect.x += speed;
+    if(IsKeyDown(LEFT)) cursorRect.x -= speed; 
+    else if (IsKeyDown(RIGHT)) cursorRect.x += speed;
 
     // Same as left and right movements but for y axis
-    if(IsKeyDown(KEY_UP)) cursorRect.y -= speed; 
-    else if (IsKeyDown(KEY_DOWN)) cursorRect.y += speed;
+    if(IsKeyDown(UP)) cursorRect.y -= speed; 
+    else if (IsKeyDown(DOWN)) cursorRect.y += speed;
 
     // Correct the x and y coordinates if the cursor leaves the screen
     if(cursorRect.x + cursorRect.width > GetScreenWidth()) 

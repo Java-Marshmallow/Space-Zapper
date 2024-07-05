@@ -1,9 +1,11 @@
 #include "raylib.h"
 #include <string>
 #include <vector>
+#include <iostream>
 #include "../headers/textBox.h"
 #include "../headers/cursor.h"
 #include "../headers/enemy.h"
+#include "../headers/keyDefinitions.h"
 
 /**********************************************************
 *                                                         *
@@ -14,6 +16,12 @@
 ************************************************************/
 
 using namespace std;
+
+enum MoveMode
+{
+    PLAYER,
+    CURSOR
+};
 
 int main()
 {
@@ -30,6 +38,7 @@ int main()
     int enemyCount = 2;
     float enemySpeed = 0.5;
     bool paused = false;
+    MoveMode currentMode = PLAYER;
 
     // Load textures
     Texture2D pTex = LoadTexture("../assets/images/ufo.png");
@@ -74,15 +83,21 @@ int main()
                 // Wipe the screen
                 ClearBackground(BLACK);
 
+                // Set move mode based on whether a key is pressed
+                if(IsKeyDown(SWITCH_MODE)) currentMode = CURSOR; else currentMode = PLAYER;
+                cout << currentMode << endl;
+
                 // For every enemy, the player checks if they've collided with it.
                 for(int i = 0; i < enemyList.size(); i++) player.CheckCollisionEnemy(enemyList[i].GetRect());
 
-                // Use player input to update the player object's coordinates and draw those updates to the screen
-                player.Move();
+                // Change what moves based on current move mode
+                if(currentMode == PLAYER) player.Move(); 
+                else cursor.Move(6);
+                // Draw player
                 player.Draw();
 
                 // When the mouse is clicked, create a new bullet and add it to the bullet list.
-                if(IsKeyPressed(KEY_SPACE)) 
+                if(IsKeyPressed(SHOOT)) 
                 {
                     // Set the bullet position to the player position and add the bullet to the beginning of the bullet list.
                     // This makes sense since the first bullet to be destroyed will be the last one added to the list.
@@ -122,13 +137,12 @@ int main()
                 hiScoreBox.DrawText(); 
                 hiScoreBox.SetText("hiscore\n" + std::to_string(hiScore));
 
-                // Update and draw the cursor
-                cursor.Move(6);
+                // Draw the cursor
                 cursor.Draw();
 
                 if(player.HasLost()) PlaySound(death);
             }
-            if(IsKeyPressed(KEY_ENTER)) 
+            if(IsKeyPressed(PAUSE)) 
             {
                 if(paused == false) paused = true;
                 else paused = false;
