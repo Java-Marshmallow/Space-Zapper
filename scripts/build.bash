@@ -1,1 +1,1 @@
-g++ main.cpp textBox.cpp bullet.cpp player.cpp cursor.cpp enemy.cpp -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -o SpaceZapper
+g++ main.cpp textBox.cpp bullet.cpp player.cpp cursor.cpp enemy.cpp -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -o SpaceZapper && ./SpaceZapper

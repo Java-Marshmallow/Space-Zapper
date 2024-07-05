@@ -68,14 +68,14 @@ void Player::Move()
 
     // If arrow key or correspondinf WASD key is pressed and the velocity limjt hasn't yet been reached, increase the velocity.
     // This makes for smooth movements.
-    if((IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) && xVel >= -6) xVel -= accel; 
-    else if ((IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) && xVel <= 6) xVel += accel;
+    if(IsKeyDown(KEY_A) && xVel >= -6) xVel -= accel; 
+    else if (IsKeyDown(KEY_D) && xVel <= 6) xVel += accel;
     // If keys aren't pressed, decelerate
     else if (xVel < 0) xVel += accel; else if (xVel > 0) xVel -= accel;
 
     // Same as left and right movements but for y axis
-    if((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) && yVel >= -6) yVel -= accel; 
-    else if ((IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) && yVel <= 6) yVel += accel;
+    if(IsKeyDown(KEY_W) && yVel >= -6) yVel -= accel; 
+    else if (IsKeyDown(KEY_S) && yVel <= 6) yVel += accel;
     else if (yVel < 0) yVel += accel; else if (yVel > 0) yVel -= accel;
 }
 

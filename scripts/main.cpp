@@ -9,9 +9,11 @@
 *                                                         *
 *   To-do list:                                           *
 *                                                         *      
-*   Fix cursor movements for web                          *
+*   Add controller support                                *
 *                                                         *      
 ************************************************************/
+
+using namespace std;
 
 int main()
 {
@@ -19,6 +21,7 @@ int main()
     InitWindow(256, 240, "Space Zapper");
     InitAudioDevice();
     SetTargetFPS(60);
+    HideCursor();
 
     // Initialize variables that'll be used in-game
     int score = 0;
@@ -26,6 +29,7 @@ int main()
     int resetTick = 0;
     int enemyCount = 2;
     float enemySpeed = 0.5;
+    bool paused = false;
 
     // Load textures
     Texture2D pTex = LoadTexture("../assets/images/ufo.png");
@@ -43,19 +47,22 @@ int main()
     Player player(pTex, LoadTexture("../assets/images/explosion.png"), 2);
 
     // Create a cursor instance
-    //Cursor cursor(LoadTexture("../assets/images/cursor.png"));
+    Cursor cursor(LoadTexture("../assets/images/cursor.png"), 2);
 
     // Create the text boxes
-    TextBox scoreBox(gameFont, ("score " + std::to_string(score)), 12, 0, 0, 5);
-    TextBox hiScoreBox(gameFont, ("hiscore\n" + std::to_string(hiScore)), 12, 145.5, 0, 5);
+    TextBox scoreBox(gameFont, ("score " + to_string(score)), 12, 0, 0, 5);
+    TextBox hiScoreBox(gameFont, ("hiscore\n" + to_string(hiScore)), 12, 145.5, 0, 5);
+    TextBox pauseBox(gameFont, "paused", 12, 0, 50, 5);
 
     // Create the vectors to store the bullets and enemies
-    std::vector<Bullet> bulletList;
-    std::vector<Enemy> enemyList(enemyCount, Enemy(eTex, player));
+    vector<Bullet> bulletList;
+    vector<Enemy> enemyList(enemyCount, Enemy(eTex, player));
     
     // Main gameplay loop. Everything in here happens 60 times every second.
     while(!WindowShouldClose())
     {
+
+        if(IsGamepadAvailable(0)) cout << "ready" << endl;
         // Begin the drawing to the screen
         BeginDrawing();
 
@@ -64,62 +71,73 @@ int main()
         {
             // The game should pause like that if you lose or if you beat the level
             if(player.HasLost() || enemyList.size() == 0) resetTick = 1;
-
-            // Wipe the screen
-            ClearBackground(BLACK);
-
-            // For every enemy, the player checks if they've collided with it.
-            for(int i = 0; i < enemyList.size(); i++) player.CheckCollisionEnemy(enemyList[i].GetRect());
-
-            // Use player input to update the player object's coordinates and draw those updates to the screen
-            player.Move();
-            player.Draw();
-
-            // When the mouse is clicked, create a new bullet and add it to the bullet list.
-            if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) 
+            if(!paused)
             {
-                // Set the bullet position to the player position and add the bullet to the beginning of the bullet list.
-                // This makes sense since the first bullet to be destroyed will be the last one added to the list.
-                Bullet bullet(GetMousePosition(), player.GetCenterPos(), 5, bTex);
-                bulletList.insert(bulletList.begin(), bullet);
-                PlaySound(shoot);
-            }
+                // Wipe the screen
+                ClearBackground(BLACK);
 
-            // Update every bullet in the list and check if it needs to be deleted.
-            for(int i = 0; i < bulletList.size(); i++) {
-                bulletList.at(i).ShootTick();
-                if(bulletList.at(i).isDeleted)
+                // For every enemy, the player checks if they've collided with it.
+                for(int i = 0; i < enemyList.size(); i++) player.CheckCollisionEnemy(enemyList[i].GetRect());
+
+                // Use player input to update the player object's coordinates and draw those updates to the screen
+                player.Move();
+                player.Draw();
+
+                // When the mouse is clicked, create a new bullet and add it to the bullet list.
+                if(IsKeyPressed(KEY_SPACE)) 
                 {
-                    bulletList.pop_back();
+                    // Set the bullet position to the player position and add the bullet to the beginning of the bullet list.
+                    // This makes sense since the first bullet to be destroyed will be the last one added to the list.
+                    Bullet bullet(cursor.GetCursorCenter(), player.GetCenterPos(), 5, bTex);
+                    bulletList.insert(bulletList.begin(), bullet);
+                    PlaySound(shoot);
                 }
-            }
 
-            // Update the enemies.
-            for(int i = 0; i < enemyList.size(); i++) 
+                // Update every bullet in the list and check if it needs to be deleted.
+                for(int i = 0; i < bulletList.size(); i++) {
+                    bulletList.at(i).ShootTick();
+                    if(bulletList.at(i).isDeleted)
+                    {
+                        bulletList.pop_back();
+                    }
+                }
+
+                // Update the enemies.
+                for(int i = 0; i < enemyList.size(); i++) 
+                {
+                    // Draw the enemies, and reset them once they hit their target
+                    enemyList[i].Draw(player, enemySpeed); 
+                    
+                    // If the enemy hits a bullet, remove the enemy from the list. This was difficult to implement
+                    if(enemyList[i].CheckBulletCollision(bulletList)) 
+                    {
+                        enemyList.erase(enemyList.begin() + i);
+                        score++;
+                        if(score > hiScore) hiScore = score;
+                    }
+                }
+
+                // Draw text boxes to the screen 
+                scoreBox.DrawText(); 
+                scoreBox.SetText("score\n" + std::to_string(score));
+
+                hiScoreBox.DrawText(); 
+                hiScoreBox.SetText("hiscore\n" + std::to_string(hiScore));
+
+                // Update and draw the cursor
+                cursor.Move(10);
+                cursor.Draw();
+
+                if(player.HasLost()) PlaySound(death);
+            }
+            if(IsKeyPressed(KEY_ENTER)) 
             {
-                // Draw the enemies, and reset them once they hit their target
-                enemyList[i].Draw(player, enemySpeed); 
-                
-                // If the enemy hits a bullet, remove the enemy from the list. This was difficult to implement
-                if(enemyList[i].CheckBulletCollision(bulletList)) 
-                {
-                    enemyList.erase(enemyList.begin() + i);
-                    score++;
-                    if(score > hiScore) hiScore = score;
-                }
+                if(paused == false) paused = true;
+                else paused = false;
             }
 
-            // Draw text boxes to the screen 
-            scoreBox.DrawText(); 
-            scoreBox.SetText("score\n" + std::to_string(score));
-
-            hiScoreBox.DrawText(); 
-            hiScoreBox.SetText("hiscore\n" + std::to_string(hiScore));
-
-            // Update and draw the cursor.
-            //cursor.FindMouse();
-
-            if(player.HasLost()) PlaySound(death);
+            // If the game is paused draw a textbos showing so
+            if(paused) pauseBox.DrawText();
         }
         // Wait for 2 seconds to elapse
         else if(resetTick < 120) resetTick++;
