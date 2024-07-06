@@ -3,10 +3,6 @@
 // Constructor creates a new bullet at the player position and sets up the target at where the mouse is
 Bullet::Bullet(Vector2 newTarget, Vector2 newOrigin, float speed, Texture2D texture)
 {
-    // Store target and origin
-    target = newTarget;
-    origin = newOrigin;
-
     // Set up bullet dimensions and origin
     bulletRect.height = bulletRect.width = 10;
     bulletRect.x = newOrigin.x - bulletRect.width/2;
@@ -40,9 +36,14 @@ void Bullet::ShootTick() // This took way longer than I would care to admit
         bulletRect.y += deltaY/delta * speedScale * GetFrameTime() * 70;
         // Distance travelled is calculated using Pythagorean Theorem
         distanceTravelled += sqrt(pow(deltaX/delta * speedScale * GetFrameTime() * 70, 2) + pow(deltaY/delta * speedScale * GetFrameTime() * 70, 2));
-        // Draw Bullet
-        DrawTextureEx(bulletTexture, (Vector2){bulletRect.x, bulletRect.y}, 0, 2, WHITE);
+        Draw();
     }
+}
+
+void Bullet::Draw()
+{
+    // Draw Bullet
+    DrawTextureEx(bulletTexture, (Vector2){bulletRect.x, bulletRect.y}, 0, 2, WHITE);
 }
 
 // Return the rectangle of the bullet (for collisions and stuff)

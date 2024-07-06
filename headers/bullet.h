@@ -6,8 +6,6 @@ class Bullet
 {
     private:
 
-    // Where the bullet will be sent to and where it starts
-    Vector2 target, origin;
     // Bullet texture
     Texture2D bulletTexture;
     // Respectively: distance between target & origin on x/y axes, and total distance, and the current amount travelled
@@ -28,4 +26,6 @@ class Bullet
     void ShootTick();
 
     Rectangle GetRect();
+
+    void Draw();
 };

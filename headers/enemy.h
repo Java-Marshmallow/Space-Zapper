@@ -33,7 +33,9 @@ class Enemy
     // Methods
     Enemy(Texture2D, Player);
 
-    void Draw(Player, float);
+    void Move(Player, float);
+
+    void Draw();
 
     void SetTarget(Player);
 

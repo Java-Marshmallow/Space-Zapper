@@ -30,33 +30,41 @@ int main()
     SetTargetFPS(60);
     HideCursor();
 
-    // Initialize variables that'll be used in-game
+    // Set game variables
+
+    // Set default score and high score
     int score = 0;
     int hiScore = 0;
+    // Reset tick takes 120 frames to reset the game
     int resetTick = 0;
-    int enemyCount = 2;
+    // Set enemy count
+    const int defaultEnemyCount = 2;
+    int enemyCount = defaultEnemyCount;
+    // Set default speed for enemies
     float enemySpeed = 30;
+    // Whether game is paused
     bool paused = false;
+    // Current movement mode
     MoveMode currentMode = PLAYER;
 
-    // Load textures
-    Texture2D pTex = LoadTexture("../assets/images/ufo.png");
-    Texture2D eTex = LoadTexture("../assets/images/enemy.png");
-    Texture2D bTex = LoadTexture("../assets/images/bullet.png");
+    // Load assets
 
+    // Load textures
+    Texture2D playerTexture = LoadTexture("../assets/images/ufo.png");
+    Texture2D enemyTexture = LoadTexture("../assets/images/enemy.png");
+    Texture2D bulletTexture = LoadTexture("../assets/images/bullet.png");
     // Load sounds
     Sound death = LoadSound("../assets/sounds/explosion.wav");
     Sound shoot = LoadSound("../assets/sounds/laserShoot.wav");
-
     // Load game font
     Font gameFont = LoadFont("../assets/fonts/sprint-2.ttf");
 
+    // Create game objects
+
     // Create the player object
-    Player player(pTex, LoadTexture("../assets/images/explosion.png"), 2);
-
-    // Create a cursor instance
+    Player player(playerTexture, LoadTexture("../assets/images/explosion.png"), 2);
+    // Create the cursor object
     Cursor cursor(LoadTexture("../assets/images/cursor.png"), 2);
-
     // Create the text boxes
     TextBox scoreBox(gameFont, ("score " + to_string(score)), 12, 0, 0, 5);
     TextBox hiScoreBox(gameFont, ("hiscore\n" + to_string(hiScore)), 12, 145.5, 0, 5);
@@ -66,7 +74,7 @@ int main()
 
     // Create the vectors to store the bullets and enemies
     vector<Bullet> bulletList;
-    vector<Enemy> enemyList(enemyCount, Enemy(eTex, player));
+    vector<Enemy> enemyList(enemyCount, Enemy(enemyTexture, player));
     
     // Main gameplay loop. Everything in here happens 60 times every second.
     while(!WindowShouldClose())
@@ -91,39 +99,21 @@ int main()
                     currentMode = CURSOR;
                     // Only center the cursor if the key is pressed once
                     if(IsKeyPressed(SWITCH_MODE))cursor.Center(player.GetRect());
-                } else currentMode = PLAYER;
-
-                // For every enemy, the player checks if they've collided with it.
-                for(int i = 0; i < enemyList.size(); i++) player.CheckCollisionEnemy(enemyList[i].GetRect());
+                } 
+                else currentMode = PLAYER;
 
                 // Draw player
                 player.Draw();
+                if(currentMode == PLAYER) player.Move();
+                if(player.HasLost()) PlaySound(death);
 
-                // When the mouse is clicked, create a new bullet and add it to the bullet list.
-                if(IsKeyPressed(SHOOT) && currentMode == CURSOR) 
-                {
-                    // Set the bullet position to the player position and add the bullet to the beginning of the bullet list.
-                    // This makes sense since the first bullet to be destroyed will be the last one added to the list.
-                    Bullet bullet(cursor.GetCursorCenter(), player.GetCenterPos(), 5, bTex);
-                    bulletList.insert(bulletList.begin(), bullet);
-                    PlaySound(shoot);
-                }
-
-                // Update every bullet in the list and check if it needs to be deleted.
-                for(int i = 0; i < bulletList.size(); i++) {
-                    bulletList.at(i).ShootTick();
-                    if(bulletList.at(i).isDeleted)
-                    {
-                        bulletList.pop_back();
-                    }
-                }
-
-                // Update the enemies.
+                // Update enemies
                 for(int i = 0; i < enemyList.size(); i++) 
                 {
+                    // For every enemy, the player checks if they've collided with it.
+                    player.CheckCollisionEnemy(enemyList[i].GetRect());
                     // Draw the enemies, and reset them once they hit their target
-                    enemyList[i].Draw(player, enemySpeed); 
-                    
+                    enemyList[i].Move(player, enemySpeed); 
                     // If the enemy hits a bullet, remove the enemy from the list. This was difficult to implement
                     if(enemyList[i].CheckBulletCollision(bulletList)) 
                     {
@@ -133,24 +123,35 @@ int main()
                     }
                 }
 
+                // When the mouse is clicked, create a new bullet and add it to the bullet list.
+                if(IsKeyPressed(SHOOT) && currentMode == CURSOR) 
+                {
+                    // Set the bullet position to the player position and add the bullet to the beginning of the bullet list.
+                    // This makes sense since the first bullet to be destroyed will be the last one added to the list.
+                    Bullet bullet(cursor.GetCursorCenter(), player.GetCenterPos(), 5, bulletTexture);
+                    bulletList.insert(bulletList.begin(), bullet);
+                    PlaySound(shoot);
+                }
+                // Update every bullet in the list and check if it needs to be deleted.
+                for(int i = 0; i < bulletList.size(); i++) {
+                    bulletList.at(i).ShootTick();
+                    if(bulletList.at(i).isDeleted) bulletList.pop_back();
+                }
+
                 // Draw text boxes to the screen 
                 scoreBox.DrawText(); 
                 scoreBox.SetText("score\n" + std::to_string(score));
 
                 hiScoreBox.DrawText(); 
-                hiScoreBox.SetText("hiscore\n" + std::to_string(hiScore));
+                hiScoreBox.SetText("hiscore\n" + std::to_string(hiScore));  
 
-                // Change what moves based on current move mode
-                if(currentMode == PLAYER) player.Move(); 
-                else 
-                {
+                if(currentMode == CURSOR){
                     cursor.Move(400);
                     // Draw the cursor
                     cursor.Draw();
                 }
-
-                if(player.HasLost()) PlaySound(death);
             }
+
             if(IsKeyPressed(PAUSE)) 
             {
                 if(paused == false) paused = true;
@@ -160,9 +161,9 @@ int main()
             // If the game is paused draw a textbos showing so
             if(paused) pauseBox.DrawText();
         }
-        // Wait for 2 seconds to elapse
+        // If the game is triggered to create a pause, increment the variable until 2 seconds have passsed
         else if(resetTick < 120) resetTick++;
-        // Executed once 2 seconds have elapsed.
+        // After the 2 second pause is over, execute this to reset the game
         else
         {
             // Reset resetTick so the gameplay loop goes again
@@ -171,7 +172,7 @@ int main()
             if(player.HasLost()) 
             {
                 score = 0;
-                enemyCount = 2;
+                enemyCount = defaultEnemyCount;
                 enemySpeed = 30;
             }
             else 
@@ -183,7 +184,7 @@ int main()
             player.Reset();
             enemyList.clear();
             bulletList.clear();
-            enemyList.assign(enemyCount, Enemy(eTex, player));
+            enemyList.assign(enemyCount, Enemy(enemyTexture, player));
             for(int i = 0; i < enemyList.size(); i++)
             {
                 enemyList[i].SetTarget(player);
@@ -198,12 +199,11 @@ int main()
     bulletList.clear();
     enemyList.clear();
     UnloadFont(gameFont);
-    UnloadTexture(pTex);
-    UnloadTexture(eTex);
-    UnloadTexture(bTex);
+    UnloadTexture(playerTexture);
+    UnloadTexture(enemyTexture);
+    UnloadTexture(bulletTexture);
     UnloadSound(death);
     UnloadSound(shoot);
-    
     CloseWindow();
     return 0;
 }

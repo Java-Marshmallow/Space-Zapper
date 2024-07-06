@@ -23,24 +23,12 @@ void Cursor::Move(float speed)
     else if (IsKeyDown(DOWN)) cursorRect.y += speed * GetFrameTime();
 
     // Correct the x and y coordinates if the cursor leaves the screen
-    if(cursorRect.x + cursorRect.width > GetScreenWidth()) 
-    {
-        cursorRect.x = GetScreenWidth() - cursorRect.width; 
-    } 
-    else if(cursorRect.x < 0) 
-    {
-        cursorRect.x = 0; 
-    }
+    if(cursorRect.x + cursorRect.width > GetScreenWidth()) cursorRect.x = GetScreenWidth() - cursorRect.width;
+    else if(cursorRect.x < 0) cursorRect.x = 0; 
 
     // Same as X check but for Y
-    if(cursorRect.y + cursorRect.height > GetScreenHeight()) 
-    {
-        cursorRect.y = GetScreenHeight() - cursorRect.height; 
-    } 
-    else if(cursorRect.y < 0) 
-    {
-        cursorRect.y = 0; 
-    }
+    if(cursorRect.y + cursorRect.height > GetScreenHeight()) cursorRect.y = GetScreenHeight() - cursorRect.height; 
+    else if(cursorRect.y < 0) cursorRect.y = 0; 
 }
 
 void Cursor::Draw()

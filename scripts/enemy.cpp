@@ -17,7 +17,7 @@ Enemy::Enemy(Texture2D texture, Player player)
 }
 
 // Updates the enemies' positions and moves them
-void Enemy::Draw(Player player, float speed)
+void Enemy::Move(Player player, float speed)
 {
     // If the enemy goes off screen, reset its targetting so it moves back to the player which is always on screen
     if(enemyRect.x > randMaxX || enemyRect.x < 0 || enemyRect.y > randMaxY || enemyRect.y < 0) SetTarget(player);
@@ -32,9 +32,14 @@ void Enemy::Draw(Player player, float speed)
         enemyRect.x += deltaX/delta * speed * GetFrameTime();
         enemyRect.y += deltaY/delta * speed * GetFrameTime();
         distanceTravelled += sqrt(pow(deltaX/delta * speed * GetFrameTime(), 2) + pow(deltaY/delta * 2 * GetFrameTime(), 2));
-        // Draw enemies to the screen
-        DrawTextureEx(enemyTexture, (Vector2){enemyRect.x, enemyRect.y}, 0, 2, WHITE);
+        Draw();
     }
+}
+
+void Enemy::Draw()
+{
+    // Draw enemies to the screen
+    DrawTextureEx(enemyTexture, (Vector2){enemyRect.x, enemyRect.y}, 0, 2, WHITE);
 }
 
 // Sets the enemy to target the player
